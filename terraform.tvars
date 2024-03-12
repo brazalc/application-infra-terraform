@@ -1,9 +1,0 @@
-region           = "us-east-1"
-cluster_name     = "application-cluster-eks"
-subnets          = [subnet-0576ffda003f8aa24,subnet-0c55802630b1c1cac]
-vpc_id           = "vpc-08b7b8fe8f1546aca"
-desired_capacity = 1
-max_capacity     = 1
-min_capacity     = 1
-instance_type    = "t2.nano"
-key_name         = "application-key-pair"
