@@ -1,3 +1,7 @@
+provider "aws" {
+  region = var.region
+}
+
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = var.cluster_name
