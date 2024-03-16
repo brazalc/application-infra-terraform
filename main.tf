@@ -1,12 +1,7 @@
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: MPL-2.0
-
 provider "aws" {
   region = var.region
 }
 
-# Filter out local zones, which are not currently supported 
-# with managed node groups
 data "aws_availability_zones" "available" {
   filter {
     name   = "opt-in-status"
@@ -69,7 +64,6 @@ module "eks" {
   eks_managed_node_groups = {
     one = {
       name = "node-group-1"
-
       instance_types = ["t2.nano"]
 
       min_size     = 1
@@ -77,15 +71,15 @@ module "eks" {
       desired_size = 2
     }
 
-    two = {
-      name = "node-group-2"
+    # two = {
+    #   name = "node-group-2"
 
-      instance_types = ["t2.nano"]
+    #   instance_types = ["t2.nano"]
 
-      min_size     = 1
-      max_size     = 2
-      desired_size = 1
-    }
+    #   min_size     = 1
+    #   max_size     = 2
+    #   desired_size = 1
+    # }
   }
 }
 
