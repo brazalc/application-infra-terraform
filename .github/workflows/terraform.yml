@@ -29,9 +29,9 @@ jobs:
     - name: Plan Terraform
       run: terraform plan
 
-    - name: Apply Terraform
-      run: terraform apply -auto-approve
+    # - name: Apply Terraform
+    #   run: terraform apply -auto-approve
 
-    - name: Cleanup
-      if: failure()
-      run: terraform destroy -auto-approve
+    # - name: Cleanup
+    #   if: failure()
+    #   run: terraform destroy -auto-approve
