@@ -9,6 +9,10 @@ data "aws_availability_zones" "available" {
   }
 }
 
+data "aws_kms_alias" "existing" {
+  name = "alias/eks/application-eks"
+}
+
 locals {
   cluster_name = "application-eks"
 }
@@ -56,31 +60,31 @@ module "eks" {
   subnet_ids                     = ["subnet-005953691b1c19ca6"]
   cluster_endpoint_public_access = true
 
-  eks_managed_node_group_defaults = {
-    ami_type = "AL2_x86_64"
+  # eks_managed_node_group_defaults = {
+  #   ami_type = "AL2_x86_64"
 
-  }
+  # }
 
-  eks_managed_node_groups = {
-    one = {
-      name = "node-group-1"
-      instance_types = ["t2.nano"]
+  # eks_managed_node_groups = {
+  #   one = {
+  #     name = "node-group-1"
+  #     instance_types = ["t2.nano"]
 
-      min_size     = 1
-      max_size     = 1
-      desired_size = 1
-    }
+  #     min_size     = 1
+  #     max_size     = 1
+  #     desired_size = 1
+  #   }
 
-    # two = {
-    #   name = "node-group-2"
+  #   two = {
+  #     name = "node-group-2"
 
-    #   instance_types = ["t2.nano"]
+  #     instance_types = ["t2.nano"]
 
-    #   min_size     = 1
-    #   max_size     = 2
-    #   desired_size = 1
-    # }
-  }
+  #     min_size     = 1
+  #     max_size     = 2
+  #     desired_size = 1
+  #   }
+  # }
 }
 
 
