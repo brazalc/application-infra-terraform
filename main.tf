@@ -91,8 +91,8 @@ resource "aws_iam_role_policy_attachment" "application-eks_eks_cni" {
 }
 
 resource "aws_subnet" "application-eks" {
-  vpc_id     = "vpc-00e8f852f3246126f"
-  cidr_block = "10.0.0.0/16"
+  vpc_id     = aws_vpc.application-eks.id
+  cidr_block = "10.0.1.0/24"
 }
 
 resource "aws_vpc" "application-eks" {
