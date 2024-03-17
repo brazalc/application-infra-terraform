@@ -53,7 +53,7 @@ module "eks" {
   cluster_version = "1.29"
 
   vpc_id                         = "vpc-00e8f852f3246126f"
-  subnet_ids                     = ["subnet-08c6a416fee6b2e7d", "subnet-0ad0ec6a943f60ebc", "subnet-0260978bbfe00eda1"]
+  subnet_ids                     = "subnet-005953691b1c19ca6"
   cluster_endpoint_public_access = true
 
   eks_managed_node_group_defaults = {

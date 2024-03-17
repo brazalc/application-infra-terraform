@@ -31,3 +31,7 @@ jobs:
 
     - name: Apply Terraform
       run: terraform apply -auto-approve
+
+    - name: Cleanup
+      if: failure()
+      run: terraform destroy -auto-approve
