@@ -51,9 +51,7 @@ resource "aws_eks_cluster" "application-eks" {
   role_arn = aws_iam_role.application-eks.arn
 
   vpc_config {
-    vpc_id                         = "vpc-00e8f852f3246126f"
-    subnet_ids                     = ["subnet-005953691b1c19ca6"]
-    # subnet_ids = [aws_subnet.application-eks.id]
+    subnet_ids = [aws_subnet.application-eks.id]
   }
 
   depends_on = [
@@ -93,7 +91,7 @@ resource "aws_iam_role_policy_attachment" "application-eks_eks_cni" {
 }
 
 resource "aws_subnet" "application-eks" {
-  vpc_id     = aws_vpc.application-eks.id
+  vpc_id     = "vpc-00e8f852f3246126f"
   cidr_block = "10.0.1.0/24"
 }
 
