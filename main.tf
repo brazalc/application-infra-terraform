@@ -51,7 +51,7 @@ resource "aws_eks_cluster" "application-eks" {
   role_arn = aws_iam_role.application-eks.arn
 
   vpc_config {
-    subnet_ids = [aws_subnet.application-eks.id]
+    subnet_ids = [aws_subnet.application-eks-1.id, aws_subnet.application-eks-2.id]
   }
 
   depends_on = [
@@ -90,9 +90,16 @@ resource "aws_iam_role_policy_attachment" "application-eks_eks_cni" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
 }
 
-resource "aws_subnet" "application-eks" {
+resource "aws_subnet" "application-eks-1" {
   vpc_id     = aws_vpc.application-eks.id
   cidr_block = "10.0.1.0/24"
+  availability_zone = "us-east-1a"
+}
+
+resource "aws_subnet" "application-eks-2" {
+  vpc_id     = aws_vpc.application-eks.id
+  cidr_block = "10.0.1.0/24"
+  availability_zone = "us-east-1a"
 }
 
 resource "aws_vpc" "application-eks" {
