@@ -2,17 +2,6 @@ provider "aws" {
   region = var.region
 }
 
-data "aws_availability_zones" "available" {
-  filter {
-    name   = "opt-in-status"
-    values = ["opt-in-not-required"]
-  }
-}
-
-data "aws_kms_alias" "existing" {
-  name = "alias/eks/application-eks"
-}
-
 locals {
   cluster_name = "application-eks"
 }
@@ -49,31 +38,92 @@ resource "random_string" "suffix" {
 #   }
 # }
 
-module "eks" {
-  source  = "terraform-aws-modules/eks/aws"
-  version = "19.15.3"
+# Remova isso
+# module "eks" {
+#   source  = "terraform-aws-modules/eks/aws"
+#   version = "12.0.0"
+#   # ... outros argumentos ...
+# }
 
-  cluster_name    = local.cluster_name
-  cluster_version = "1.29"
+# Adicione isso
+resource "aws_eks_cluster" "application-eks" {
+  name     = "application-eks"
+  role_arn = aws_iam_role.application-eks.arn
 
-  vpc_id                         = "vpc-00e8f852f3246126f"
-  subnet_ids                     = ["subnet-005953691b1c19ca6"]
-  cluster_endpoint_public_access = true
+  vpc_config {
+    subnet_ids = [aws_subnet.application-eks.id]
+  }
 
-  # eks_managed_node_group_defaults = {
-  #   ami_type = "AL2_x86_64"
+  depends_on = [
+    aws_iam_role_policy_attachment.application-eks_eks,
+    aws_iam_role_policy_attachment.application-eks_eks_cni,
+  ]
+}
 
-  # }
+resource "aws_iam_role" "application-eks" {
+  name = "application-eks"
 
-  # eks_managed_node_groups = {
-  #   one = {
-  #     name = "node-group-1"
-  #     instance_types = ["t2.nano"]
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "eks.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+POLICY
+}
 
-  #     min_size     = 1
-  #     max_size     = 1
-  #     desired_size = 1
-  #   }
+resource "aws_iam_role_policy_attachment" "application-eks_eks" {
+  role       = aws_iam_role.application-eks.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "application-eks_eks_cni" {
+  role       = aws_iam_role.application-eks.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+}
+
+resource "aws_subnet" "application-eks" {
+  vpc_id     = aws_vpc.application-eks.id
+  cidr_block = "10.0.1.0/24"
+}
+
+resource "aws_vpc" "application-eks" {
+  cidr_block = "10.0.0.0/16"
+}
+
+# module "eks" {
+#   source  = "terraform-aws-modules/eks/aws"
+#   version = "19.15.3"
+
+#   cluster_name    = local.cluster_name
+#   cluster_version = "1.29"
+
+#   vpc_id                         = "vpc-00e8f852f3246126f"
+#   subnet_ids                     = ["subnet-005953691b1c19ca6"]
+#   cluster_endpoint_public_access = true
+
+#   eks_managed_node_group_defaults = {
+#     ami_type = "AL2_x86_64"
+
+#   }
+
+#   eks_managed_node_groups = {
+#     one = {
+#       name = "node-group-1"
+#       instance_types = ["t2.nano"]
+
+#       min_size     = 1
+#       max_size     = 1
+#       desired_size = 1
+#     }
 
   #   two = {
   #     name = "node-group-2"
@@ -85,7 +135,7 @@ module "eks" {
   #     desired_size = 1
   #   }
   # }
-}
+# }
 
 
 # https://aws.amazon.com/blogs/containers/amazon-ebs-csi-driver-is-now-generally-available-in-amazon-eks-add-ons/ 
