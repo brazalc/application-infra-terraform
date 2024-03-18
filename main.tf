@@ -12,16 +12,12 @@ resource "aws_eks_cluster" "application-eks" {
 
   vpc_config {
     subnet_ids = [
-      "subnet-0b8e186c4ab49a658",
-      "subnet-01322d31ffbfa2e1f",
-      "subnet-0276ca9dbdd8cc764",
-      "subnet-0487e1aaaf7d3a03b"
+      "subnet-09916962b8c913fe3",
+      "subnet-04f6575cbc864bb2c",
+      "subnet-0f4e9a58cfa89aa3a",
+      "subnet-02ed050b87473acae"
       ]
   }
-
-  # vpc_config {
-  #   subnet_ids = module.vpc.public_subnets
-  # }
 
   depends_on = [
     aws_iam_role.eks-iam-role
@@ -35,13 +31,12 @@ resource "aws_eks_node_group" "worker-node-group" {
   instance_types = ["t3.medium"]
   node_role_arn = aws_iam_role.workernodes.arn
   subnet_ids = [
-      "subnet-0b8e186c4ab49a658",
-      "subnet-01322d31ffbfa2e1f",
-      "subnet-0276ca9dbdd8cc764",
-      "subnet-0487e1aaaf7d3a03b"
+      "subnet-09916962b8c913fe3",
+      "subnet-04f6575cbc864bb2c",
+      "subnet-0f4e9a58cfa89aa3a",
+      "subnet-02ed050b87473acae"
       ]
-  #subnet_ids = module.vpc.public_subnets
- 
+
   scaling_config {
     desired_size = 1
     max_size     = 1
@@ -63,8 +58,6 @@ resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerRegistryReadOnly-EK
  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
  role    = aws_iam_role.eks-iam-role.name
 }
-
-
 
 resource "aws_iam_role" "eks-iam-role" {
   name = "application-eks-iam-role"
